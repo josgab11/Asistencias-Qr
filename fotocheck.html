@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Fotocheck del Empleado</title>
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+         background-color: #f4f4f4;
+      }
+      .card {
+         background-color: white;
+         padding: 20px;
+         border-radius: 10px;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+         text-align: center;
+      }
+      .card img {
+         border-radius: 50%;
+         width: 150px;
+         height: 150px;
+         object-fit: cover;
+      }
+      .card h2 {
+         margin: 10px 0;
+         font-size: 24px;
+      }
+      .card p {
+         font-size: 18px;
+         color: #555;
+      }
+   </style>
+</head>
+<body>
+   <div class="card">
+      <img id="employeePhoto" src="" alt="Foto del Empleado">
+      <h2 id="employeeName">Nombre del Empleado</h2>
+      <p><strong>ID:</strong> <span id="employeeId"></span></p>
+      <p><strong>Horario de Entrada:</strong> <span id="checkInTime">--:--</span></p>
+      <p><strong>Horario de Salida:</strong> <span id="checkOutTime">--:--</span></p>
+   </div>
+
+   <script>
+      // Obtener el ID del empleado desde la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const employeeId = urlParams.get('id');
+
+      // URL del script de Google Apps
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbxvaaGtriBUQsS2GOYV8w7NbA7iWxSUgEkJ-6STLxsvtP7xOvnDsJLgz_SNM3tCrQWbtg/exec';
+
+      // Hacer la petición al script
+      fetch(`${scriptUrl}?id=${employeeId}`)
+         .then(response => response.json())
+         .then(data => {
+            if (data.error) {
+               alert(data.error);
+            } else {
+               document.getElementById('employeePhoto').src = data.photo;
+               document.getElementById('employeeName').textContent = data.name;
+               document.getElementById('employeeId').textContent = employeeId;
+               document.getElementById('checkInTime').textContent = data.checkInTime;
+               document.getElementById('checkOutTime').textContent = data.checkOutTime;
+            }
+         })
+         .catch(error => console.error('Error al obtener datos:', error));
+   </script>
+</body>
+</html>
